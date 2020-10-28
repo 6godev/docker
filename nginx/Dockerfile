@@ -1,7 +1,8 @@
 FROM nginx:stable-alpine
 
-COPY ./etc/nginx.conf /etc/nginx/nginx.conf
-COPY ./etc/default_headers /etc/nginx/default_headers
+COPY ./config/nginx.conf /etc/nginx/nginx.conf
+COPY ./config/default_headers /etc/nginx/default_headers
+COPY ./templates /etc/nginx/templates
 
 RUN mkdir -p /var/www
 
