@@ -1,3 +1,5 @@
+[![pipeline status](https://gitlab.com/6go-srl/docker/badges/master/pipeline.svg)](https://gitlab.com/6go-srl/docker/-/commits/master)
+
 # Docker
 
 This repository contains all the docker images used by us internally.
