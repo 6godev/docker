@@ -1,11 +1,9 @@
 FROM php:7.4-fpm-alpine
 
-ARG APP_ENV
 ARG BUILD_DATE
 ARG VCS_REF
-ARG GITHUB_AUTH_TOKEN
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_ALLOW_SUPERUSER 0
 
 LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
   PHP="7.4" \
@@ -42,7 +40,7 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS \
     && docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install \
+    && docker-php-ext-install -j$(nproc) \
        bcmath \
        calendar \
        exif \
@@ -51,7 +49,6 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS \
        mbstring \
        opcache \
        pcntl \
-       pdo \
        pdo_mysql \
        zip \
     && apk del -f .php-deps
@@ -60,21 +57,6 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS \
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer \
     && php -r "unlink('composer-setup.php');"
-
-# If requested we can install xDebug
-RUN if [ ! "production" == "$APP_ENV" ] && [ ! "prod" == "$APP_ENV" ]; \
-    then apk add --no-cache --virtual .php-deps $PHPIZE_DEPS \
-         && pecl install xdebug \
-         && docker-php-ext-enable xdebug \
-         && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-         && echo "xdebug.remote_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-         && apk del -f .php-deps ; \
-    fi
-
-# You can set a Github oauth token here
-RUN if [[ -n "$GITHUB_AUTH_TOKEN" ]] ; \
-    then composer config --global --auth github-oauth.github.com $GITHUB_AUTH_TOKEN ; \
-    fi
 
 # Cleanup dependencies
 RUN rm -rf /usr/share/php \
