@@ -1,4 +1,3 @@
-
 FROM alpine:3.12
 
 ARG ANSIBLE_VERSION=2.10.1
@@ -55,8 +54,6 @@ Host *\n\
     StrictHostKeyChecking no\n\
     UserKnownHostsFile=/dev/null\n\
 """ >> /etc/ssh/ssh_config
-
-COPY entrypoint /usr/local/bin/
 
 WORKDIR /ansible
 

@@ -9,30 +9,35 @@ variables:
   # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
   DOCKER_HOST: tcp://docker:2376
   DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_DRIVER: overlay2
 
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-ansible:
+ansible-2.10:
   stage: build
   script:
-    - docker build -t $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 ./ansible/
+    - docker pull $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 -t $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 ./ansible/
     - docker push $CI_REGISTRY/6go-srl/docker/ansible:2.10.1
 
 php-74:
   stage: build
   script:
-    - docker build -t $CI_REGISTRY/6go-srl/docker/php:7.4 ./php/7.4/
+    - docker pull $CI_REGISTRY/6go-srl/docker/php:7.4 || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/php:7.4 -t $CI_REGISTRY/6go-srl/docker/php:7.4 ./php/7.4/
     - docker push $CI_REGISTRY/6go-srl/docker/php:7.4
 
 nginx:
   stage: build
   script:
-    - docker build -t $CI_REGISTRY/6go-srl/docker/nginx:latest ./nginx/
+    - docker pull $CI_REGISTRY/6go-srl/docker/nginx:latest || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/nginx:latest -t $CI_REGISTRY/6go-srl/docker/nginx:latest ./nginx/
     - docker push $CI_REGISTRY/6go-srl/docker/nginx:latest
 
 mailhog:
   stage: build
   script:
-    - docker build -t $CI_REGISTRY/6go-srl/docker/mailhog:latest ./mailhog/
+    - docker pull $CI_REGISTRY/6go-srl/docker/mailhog:latest || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/mailhog:latest -t $CI_REGISTRY/6go-srl/docker/mailhog:latest ./mailhog/
     - docker push $CI_REGISTRY/6go-srl/docker/mailhog:latest
