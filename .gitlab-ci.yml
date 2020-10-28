@@ -13,6 +13,12 @@ variables:
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
+ansible:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY/6go-srl/docker/ansible:2.10.2 ./ansible/
+    - docker push $CI_REGISTRY/6go-srl/docker/ansible:2.10.2
+
 php-74:
   stage: build
   script:

@@ -1,17 +1,19 @@
 
 FROM alpine:3.12
 
+ARG ANSIBLE_VERSION=2.10.2
+ARG ANSIBLE_LINT_VERSION=4.3.5
 ARG BUILD_DATE
+ARG MITOGEN_VERSION=0.2.9
 ARG VCS_REF
 
-# Metadata
-LABEL maintainer="Pascal A. <pascalito@gmail.com>" \
+LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
       org.label-schema.build-date=${BUILD_DATE} \
       org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
       org.label-schema.vcs-ref=${VCS_REF} \
       org.label-schema.docker.dockerfile="/Dockerfile" \
       org.label-schema.description="Ansible on alpine docker image" \
-      org.label-schema.schema-version="1.0"
+      org.label-schema.schema-version=${ANSIBLE_VERSION}
 
 RUN apk --update --no-cache add \
         ca-certificates \
@@ -30,14 +32,14 @@ RUN apk --update add --virtual \
         openssl-dev \
         build-base \
         curl \
-    && curl -s -L https://networkgenomics.com/try/mitogen-0.2.9.tar.gz | tar xzf - -C /opt/ \
+    && curl -s -L https://networkgenomics.com/try/mitogen-{$MITOGEN_VERSION}.tar.gz | tar xzf - -C /opt/ \
     && mv /opt/mitogen-* /opt/mitogen \
     && pip3 install --upgrade \
         pip \
         cffi \
     && pip3 install \
-        ansible \
-        ansible-lint \
+        ansible==${ANSIBLE_VERSION} \
+        ansible-lint==${ANSIBLE_LINT_VERSION} \
     && apk del .build-deps
 
 # Cleanup dependencies
