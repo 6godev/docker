@@ -47,6 +47,7 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS \
        calendar \
        exif \
        gd \
+       intl \
        mbstring \
        opcache \
        pcntl \
