@@ -1,0 +1,32 @@
+image: docker:stable
+services:
+  - docker:stable-dind
+
+stages:
+  - build
+
+variables:
+  # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+php-74:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY/6go-srl/docker/php:7.4 ./php/
+    - docker push $CI_REGISTRY/6go-srl/docker/php:7.4
+
+nginx:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY/6go-srl/docker/nginx:latest ./nginx/
+    - docker push $CI_REGISTRY/6go-srl/docker/nginx:latest
+
+mailhog:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY/6go-srl/docker/mailhog:latest ./mailhog/
+    - docker push $CI_REGISTRY/6go-srl/docker/mailhog:latest

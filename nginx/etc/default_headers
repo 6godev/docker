@@ -1,0 +1,26 @@
+add_header 'Access-Control-Allow-Origin' '*';
+add_header 'Access-Control-Allow-Credentials' 'true';
+add_header 'Access-Control-Allow-Methods' 'HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS';
+add_header 'Access-Control-Allow-Headers' 'X-XSRF-TOKEN,X-Web-App,Accept,Accept-Language,Authorization,Content-Language,Content-Type,DPR,Save-Data,Viewport-Width,Width,X-Requested-With,X-RateLimit-Limit,X-RateLimit-Remaining';
+add_header 'Access-Control-Expose-Headers' 'Authorization';
+
+add_header X-Cache 'Hit From Behind';
+add_header X-Frame-Options 'SAMEORIGIN';
+add_header X-XSS-Protection '1; mode=block';
+add_header X-Content-Type-Options 'nosniff';
+add_header Referrer-Policy 'same-origin';
+add_header Strict-Transport-Security 'max-age=31536000; includeSubDomains; preload';
+
+# TODO This needs to be fixed
+#add_header 'Content-Security-Policy' "default-src 'self' ws: wss: data: blob:;
+#script-src 'self' 'unsafe-inline' 'unsafe-eval';
+#style-src 'self' 'unsafe-inline';
+#img-src 'self' data: blob: ;
+#connect-src 'self';
+#font-src 'self';
+#object-src 'self' 'unsafe-inline';
+#media-src 'self' data: blob: ;
+#frame-src 'self';
+#worker-src 'self' 'unsafe-inline' ;
+#form-action 'self';
+#frame-ancestors 'self' 'unsafe-inline'";
