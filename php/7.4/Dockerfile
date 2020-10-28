@@ -9,7 +9,7 @@ COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ./config/php.ini /usr/local/etc/php
 COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
 
-RUN adduser -u 1000 -S -D -G www-data www-data
+RUN adduser -D -H -u 1000 -s /bin/bash www-data -G www-data
 
 # Install Imagick, GD, MySQL, Redis and other necessary extensions
 RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS \
