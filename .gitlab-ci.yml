@@ -16,8 +16,8 @@ before_script:
 ansible:
   stage: build
   script:
-    - docker build -t $CI_REGISTRY/6go-srl/docker/ansible:2.10.2 ./ansible/
-    - docker push $CI_REGISTRY/6go-srl/docker/ansible:2.10.2
+    - docker build -t $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 ./ansible/
+    - docker push $CI_REGISTRY/6go-srl/docker/ansible:2.10.1
 
 php-74:
   stage: build
