@@ -1,9 +1,20 @@
 FROM php:7.4-fpm-alpine
 
 ARG APP_ENV
+ARG BUILD_DATE
+ARG VCS_REF
 ARG GITHUB_AUTH_TOKEN
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
+
+LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
+  PHP="7.4" \
+  org.label-schema.name="6go-srl/docker" \
+  org.label-schema.description=" Docker image for internal usage on development and production" \
+  org.label-schema.build-date=$BUILD_DATE \
+  org.label-schema.schema-version="1.0" \
+  org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
+  org.label-schema.vcs-ref=$VCS_REF
 
 COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ./config/php.ini /usr/local/etc/php
