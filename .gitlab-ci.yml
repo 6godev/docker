@@ -16,7 +16,7 @@ before_script:
 php-74:
   stage: build
   script:
-    - docker build -t $CI_REGISTRY/6go-srl/docker/php:7.4 ./php/
+    - docker build -t $CI_REGISTRY/6go-srl/docker/php:7.4 ./php/7.4/
     - docker push $CI_REGISTRY/6go-srl/docker/php:7.4
 
 nginx:
