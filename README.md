@@ -19,7 +19,7 @@ Example of a `docker-compose.yml` container, assuming you have a hosts file and 
 
 ```YML
 ansible:
-  image: registry.gitlab.com/6go-srl/docker/php:7.4
+  image: registry.gitlab.com/6go-srl/docker/ansible:2.10.1
   container_name: ansible
   restart: unless-stopped
   volumes:
