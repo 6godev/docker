@@ -33,13 +33,13 @@ php-7.4:
     - docker build --cache-from $CI_REGISTRY/6go-srl/docker/php:7.4 -t $CI_REGISTRY/6go-srl/docker/php:7.4 ./php/7.4/
     - docker push $CI_REGISTRY/6go-srl/docker/php:7.4
 
-nginx-1.18:
+nginx-1.19:
   stage: nginx
   needs: []
   script:
-    - docker pull $CI_REGISTRY/6go-srl/docker/nginx:1.18 || true
-    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/nginx:1.19 -t $CI_REGISTRY/6go-srl/docker/nginx:1.18 ./nginx/
-    - docker push $CI_REGISTRY/6go-srl/docker/nginx:1.18
+    - docker pull $CI_REGISTRY/6go-srl/docker/nginx:1.19 || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/nginx:1.19 -t $CI_REGISTRY/6go-srl/docker/nginx:1.19 ./nginx/
+    - docker push $CI_REGISTRY/6go-srl/docker/nginx:1.19
 
 mailhog-latest:
   stage: mailhog
