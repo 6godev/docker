@@ -9,9 +9,7 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
   org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
   org.label-schema.vcs-ref=$VCS_REF
 
-COPY ./config/nginx.conf /etc/nginx/nginx.conf
-COPY ./config/default_headers /etc/nginx/default_headers
-COPY ./config/default_cache /etc/nginx/default_cache
+COPY ./config/ /etc/nginx/
 COPY ./templates /etc/nginx/templates
 
 RUN mkdir -p /var/www
