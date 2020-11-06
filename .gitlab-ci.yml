@@ -31,9 +31,9 @@ php-74:
 nginx:
   stage: build
   script:
-    - docker pull $CI_REGISTRY/6go-srl/docker/nginx:latest || true
-    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/nginx:latest -t $CI_REGISTRY/6go-srl/docker/nginx:latest ./nginx/
-    - docker push $CI_REGISTRY/6go-srl/docker/nginx:latest
+    - docker pull $CI_REGISTRY/6go-srl/docker/nginx:1.19 || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/nginx:1.19 -t $CI_REGISTRY/6go-srl/docker/nginx:1.19 ./nginx/
+    - docker push $CI_REGISTRY/6go-srl/docker/nginx:1.19
 
 mailhog:
   stage: build

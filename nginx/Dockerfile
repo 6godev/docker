@@ -1,4 +1,4 @@
-FROM nginx:stable-alpine
+FROM nginx:1.19-alpine
 
 COPY ./config/nginx.conf /etc/nginx/nginx.conf
 COPY ./config/default_headers /etc/nginx/default_headers
