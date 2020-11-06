@@ -64,22 +64,21 @@ When using this image you **must** pass some variables in order to generate the 
     container_name: nginx
     restart: on-failure
     environment:
-      NGINX_PORT: 80
-      NGINX_SERVER_NAME: web.app
-      NGINX_PHP_CONTAINER_NAME: php
-      NGINX_ROOT: /var/www/public/
+      PORT: 80
+      SERVER_NAME: web.app
+      PHP_CONTAINER_NAME: php
+      PHP_CONTAINER_PORT: 9000
+      ROOT: /var/www/public/
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - /path/to/source/code:/var/www/:ro
     networks:
       - customnet
 ```
 
-#### Current Limitations
-
-Right now this container doesn't support HTTPS because it was created for development purposes only. We are testing the HTTPS support stay tuned!
+The current template provided doesn't support HTTPS because it was designed for development purposes only. If you need HTTPS you should build a custom
+image based on this and slap inside everything needed for HTTPS like certbot.
 
 
 ### PHP

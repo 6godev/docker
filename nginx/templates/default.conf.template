@@ -1,9 +1,16 @@
+#
+# This template should serve as an example for development purposes
+# in order to be up and running in no time
+# for production is higly reccomended to use a custom configuration and pass that
+# either as a shared volumes or inside a dockerfile
+#
+
 limit_req_zone $binary_remote_addr zone=one:10m rate=30r/m;
 limit_conn_zone $binary_remote_addr zone=addr:10m;
 
 server {
-    listen ${PORT} http2;
-    listen [::]:${PORT} http2;
+    listen ${PORT} default_server;
+    listen [::]:${PORT};
 
     server_name ${SERVER_NAME};
     root ${ROOT};
