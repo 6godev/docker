@@ -19,6 +19,7 @@ before_script:
 
 ansible-2.10:
   stage: ansible
+  needs: []
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 || true
     - docker build --cache-from $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 -t $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 ./ansible/
@@ -26,6 +27,7 @@ ansible-2.10:
 
 php-7.4:
   stage: php
+  needs: []
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/php:7.4 || true
     - docker build --cache-from $CI_REGISTRY/6go-srl/docker/php:7.4 -t $CI_REGISTRY/6go-srl/docker/php:7.4 ./php/7.4/
@@ -33,6 +35,7 @@ php-7.4:
 
 nginx-1.18:
   stage: nginx
+  needs: []
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/nginx:1.18 || true
     - docker build --cache-from $CI_REGISTRY/6go-srl/docker/nginx:1.19 -t $CI_REGISTRY/6go-srl/docker/nginx:1.18 ./nginx/
@@ -40,6 +43,7 @@ nginx-1.18:
 
 mailhog-latest:
   stage: mailhog
+  needs: []
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/mailhog:latest || true
     - docker build --cache-from $CI_REGISTRY/6go-srl/docker/mailhog:latest -t $CI_REGISTRY/6go-srl/docker/mailhog:latest ./mailhog/
