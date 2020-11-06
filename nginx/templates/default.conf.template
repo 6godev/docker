@@ -4,6 +4,19 @@ limit_conn_zone $binary_remote_addr zone=addr:10m;
 
 server {
     listen ${NGINX_PORT};
+    listen [::]:${NGINX_PORT};
+
+    server_name ${NGINX_SERVER_NAME};
+
+    location / {
+        return 301 https://$host$request_uri;
+    }    
+}
+
+server {
+    listen ${NGINX_SSL_PORT} ssl;
+    listen [::]:${NGINX_SSL_PORT} ssl;
+
     server_name ${NGINX_SERVER_NAME};
 
     index index.php index.html;
@@ -20,10 +33,43 @@ server {
     client_body_timeout 5s;
     client_header_timeout 5s;
 
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
+    location ~* \.(jpg|jpeg|png|gif|ico|ttf)$ {
+        expires 365d;
+        add_header Vary Accept-Encoding;
+        add_header Cache-Control public;
 
+        ## Send the all shebang in one fell swoop.
+        tcp_nodelay off;
+        access_log off;
+
+        ## Set the OS file cache.
+        open_file_cache max=3000 inactive=120s;
+        open_file_cache_valid 45s;
+        open_file_cache_min_uses 2;
+        open_file_cache_errors off;
+    }
+
+    location ~* \.(css|js)$ {
+        expires 7d;
+        add_header Vary Accept-Encoding;
+        add_header Cache-Control public;
+
+        ## Send the all shebang in one fell swoop.
+        tcp_nodelay off;
+        access_log off;
+        log_not_found off;
+
+        ## Set the OS file cache.
+        open_file_cache max=3000 inactive=120s;
+        open_file_cache_valid 45s;
+        open_file_cache_min_uses 2;
+        open_file_cache_errors off;
+    }   
+
+    location / {
         gzip_static on;
+
+        try_files $uri $uri/ /index.php?$query_string;
     }
 
     location ~ ^/index\.php(/|$) {
