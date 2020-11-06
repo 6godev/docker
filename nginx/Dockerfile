@@ -1,11 +1,11 @@
-FROM nginx:1.19-alpine
+FROM nginx:stable-alpine
 
 COPY ./config/nginx.conf /etc/nginx/nginx.conf
 COPY ./config/default_headers /etc/nginx/default_headers
 COPY ./templates /etc/nginx/templates
 
 LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
-  NGINX="1.19" \
+  NGINX="1.18" \
   org.label-schema.name="6go-srl/docker" \
   org.label-schema.description=" Docker image for internal usage on development and production" \
   org.label-schema.build-date=$BUILD_DATE \
