@@ -10,7 +10,9 @@ if [ "$role" = "queue" ]; then
     echo "Running the queue..."
     php /var/www/artisan queue:work --verbose --tries=3 --timeout=90
 
-elif [ "$role" = "scheduler" ]; then
+fi
+
+if [ "$role" = "scheduler" ]; then
 
     while [ true ]
     do
@@ -18,7 +20,4 @@ elif [ "$role" = "scheduler" ]; then
       sleep 60
     done
 
-else
-    echo "Could not match the container role \"$role\""
-    exit 1
 fi
