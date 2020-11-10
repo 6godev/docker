@@ -70,3 +70,5 @@ RUN mkdir -p /var/www \
     && chmod u+x /usr/local/bin/roles
 
 WORKDIR /var/www
+
+CMD ["/usr/local/bin/roles"]
