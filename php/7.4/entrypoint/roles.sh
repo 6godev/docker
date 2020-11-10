@@ -6,8 +6,7 @@ role=${CONTAINER_ROLE:-app}
 env=${APP_ENV:-production}
 
 if [ "$env" != "development" ]; then
-    echo "Caching configuration..."
-    (cd /var/www && php artisan optimize)
+    exec php -a
 fi
 
 if [ "$role" = "production" ]; then
