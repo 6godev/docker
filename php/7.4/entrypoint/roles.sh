@@ -6,12 +6,15 @@ role=${CONTAINER_ROLE:-app}
 env=${APP_ENV:-production}
 
 if [ "$env" != "development" ]; then
-    exec php -a
+    
+    echo "Running in development mode...";
+    exit 1
 fi
 
 if [ "$role" = "production" ]; then
-
-    exec php -a
+    
+    echo "Running in production mode...";
+    exit 1
 
 elif [ "$role" = "queue" ]; then
 
