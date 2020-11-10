@@ -5,18 +5,7 @@ set -e
 role=${CONTAINER_ROLE:-app}
 env=${APP_ENV:-production}
 
-if [ "$env" != "development" ]; then
-    
-    echo "Running in development mode...";
-    exit 1
-fi
-
-if [ "$role" = "production" ]; then
-    
-    echo "Running in production mode...";
-    exit 1
-
-elif [ "$role" = "queue" ]; then
+if [ "$role" = "queue" ]; then
 
     echo "Running the queue..."
     php /var/www/artisan queue:work --verbose --tries=3 --timeout=90
