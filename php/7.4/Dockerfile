@@ -65,7 +65,6 @@ RUN rm -rf /usr/share/php \
 
 # Prepare the workdir
 RUN mkdir -p /var/www \
-    && chown -R www-data:www-data /var/www \
-    && chmod u+x /usr/local/bin/roles
+    && chown -R www-data:www-data /var/www
 
 WORKDIR /var/www
