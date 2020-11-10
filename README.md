@@ -93,6 +93,7 @@ A simple `docker-compose.yml` could look like this:
     restart: always
     environment:
       APP_ENV: ${APP_ENV}
+      CONTAINER_ROLE: development|production|scheduler|queue
     volumes:
       - /path/to/source/code:/var/www:delegated
     ports:

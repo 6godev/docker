@@ -17,6 +17,7 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
 COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ./config/php.ini /usr/local/etc/php
 COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
+COPY ./entrypoint/roles.sh /usr/local/bin/roles
 
 # Install Imagick, GD, MySQL, Redis and other necessary extensions
 RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool make \
@@ -65,6 +66,7 @@ RUN rm -rf /usr/share/php \
 
 # Prepare the workdir
 RUN mkdir -p /var/www \
-    && chown -R www-data:www-data /var/www
+    && chown -R www-data:www-data /var/www \
+    && chmod u+x /usr/local/bin/roles
 
 WORKDIR /var/www
