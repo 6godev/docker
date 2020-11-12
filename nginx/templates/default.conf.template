@@ -5,6 +5,35 @@
 # either as a shared volumes or inside a dockerfile
 #
 
+#
+# The fastcgi_cache_path directive specifies the number of parameters which are:
+#
+# --- /var/cache/nginx the path to the local disk directory for the cache.
+# --- levels defines the hierarchy levels of a cache, it sets up a two-level directory hierarchy under /var/cache/nginx.
+# --- keys_zone (name:size) enables the creation of a shared memory zone where all active keys and information about data (meta) are stored.
+#                           Note that storing the keys in memory speeds up the checking process, by making it easier for NGINX to determine whether its a MISS or HIT,
+#                           without checking the status on disk.
+# --- inactive specifies the amount of time after which cached data that are not accessed during the time specified get deleted from the cache regardless of their freshness.
+#              A value of 60m in our template configuration means files not accessed after 60 will get removed from the cache.
+# --- max_size specifies the maximum size of the cache. There are more parameters you can use here (read the NGINX documentation for more information).
+#
+
+fastcgi_cache_path /var/cache/nginx levels=1:2 keys_zone=CACHEZONE:100m inactive=60m max_size=40m;
+
+#
+# The variables in the fastcgi_cache_key directive is described below.
+# NGINX uses them in calculating the key (identifier) of a request.
+# Importantly, to send a cached response to the client, the request must have the same key as a cached response.
+#
+# --- $scheme request scheme, HTTP or HTTPS.
+# --- $request_method request method, usually “GET” or “POST”.
+# --- $host this can be hostname from the request line, or hostname from the “Host” request header field, or the server name matching a request, in the order of precedence.
+# --- $request_uri means the full original request URI (with arguments).
+#
+
+fastcgi_cache_key "$scheme$request_method$host$request_uri";
+
+# Limit requests to avoid flooding
 limit_req_zone $binary_remote_addr zone=one:10m rate=30r/m;
 limit_conn_zone $binary_remote_addr zone=addr:10m;
 
@@ -29,6 +58,20 @@ server {
     client_header_timeout 5s;
 
     disable_symlinks if_not_owner from=${ROOT};
+
+    set $skipCache 0;
+
+    if ($request_method = PATCH) {
+        set $skipCache 1;
+    }
+
+    if ($request_method = PUT) {
+        set $skipCache 1;
+    }
+
+    if ($request_method = POST) {
+        set $skipCache 1;
+    }
 
     location ~* \.(jpg|jpeg|png|gif|ico|ttf)$ {
         expires 365d;
@@ -59,6 +102,12 @@ server {
         fastcgi_pass ${PHP_CONTAINER_NAME}:${PHP_CONTAINER_PORT};
         fastcgi_split_path_info ^(.+?\.php)(/.*)$;
         fastcgi_index index.php;
+
+        fastcgi_cache_bypass $skipCache;
+        fastcgi_no_cache $skipCache;
+        
+        # include cache parameters
+        include /etc/nginx/fastcgi_cache;
 
         # include the fastcgi_param setting
         include /etc/nginx/fastcgi_params;

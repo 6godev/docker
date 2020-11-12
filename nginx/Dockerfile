@@ -12,7 +12,8 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
 COPY ./config/ /etc/nginx/
 COPY ./templates /etc/nginx/templates
 
-RUN mkdir -p /var/www
+RUN mkdir -p /var/www \
+    && mkdir -p /var/cache/nginx
 
 RUN adduser -D -H -u 1000 -s /bin/bash www-data -G www-data
 
