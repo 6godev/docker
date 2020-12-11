@@ -3,13 +3,17 @@ FROM php:7.4-fpm-alpine
 ARG BUILD_DATE
 ARG VCS_REF
 
-ENV COMPOSER_ALLOW_SUPERUSER 0
-ENV OPCACHE_ENABLE 1
-ENV OPCACHE_VALIDATE_TIMESTAMPS 0
+ENV COMPOSER_ALLOW_SUPERUSER=0
 
-ENV XDEBUG_MODE off
-ENV XDEBUG_CLIENT_HOST localhost
-ENV XDEBUG_CLIENT_PORT 9003
+# We can decide to enable or disable opcache in runtime build
+# for example in development it's useful to keep this disable
+ENV OPCACHE_ENABLE=1
+ENV OPCACHE_VALIDATE_TIMESTAMPS=0
+
+# xDebug mode should be set off in production
+ENV XDEBUG_MODE=off
+ENV XDEBUG_CLIENT_HOST=localhost
+ENV XDEBUG_CLIENT_PORT=9003
 
 LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
     PHP="7.4" \
@@ -22,8 +26,6 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
 
 COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ./config/php.ini "$PHP_INI_DIR"
-COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
-COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # Install Imagick, GD, MySQL, Redis and other necessary extensions
 RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool make \
@@ -60,6 +62,10 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     pdo_mysql \
     zip \
     && apk del -f .php-deps
+
+# Copy other .ini files after the installation process
+COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
+COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # Install Composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
