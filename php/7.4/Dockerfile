@@ -34,7 +34,7 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     freetype-dev \
     libpng \
     libpng-dev \
-    libpq-dev \
+    postgresql-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
     libzip-dev \
