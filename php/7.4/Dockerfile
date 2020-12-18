@@ -27,13 +27,14 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
 COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ./config/php.ini "$PHP_INI_DIR"
 
-# Install Imagick, GD, MySQL, Redis and other necessary extensions
+# Install Imagick, GD, MySQL, Postgres, Redis and other necessary extensions
 RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool make \
     && apk add --no-cache \
     freetype \
     freetype-dev \
     libpng \
     libpng-dev \
+    libpq-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
     libzip-dev \
@@ -59,6 +60,8 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     mbstring \
     opcache \
     pcntl \
+    pgsql \
+    pdo_pgsql \
     pdo_mysql \
     zip \
     && apk del -f .php-deps
