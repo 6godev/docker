@@ -120,4 +120,9 @@ server {
 
     location ~ /\.docker/  { deny all; }
     location ~ /\.git/  { deny all; }
+
+    ##location ${ACME_CHALLENGE_LOCATION} {
+    ##    default_type "text/plain";
+    ##    alias ${ACME_CHALLENGE_ALIAS};
+    ##}
 }
