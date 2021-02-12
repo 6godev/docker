@@ -81,7 +81,8 @@ RUN rm -rf /usr/share/php \
     && rm -rf /var/cache/apk/*
 
 # Prepare the workdir
-RUN mkdir -p /var/www
+RUN mkdir -p /var/www \
+    && chown -Rf www-data:www-data /var/www
 
 WORKDIR /var/www
 
