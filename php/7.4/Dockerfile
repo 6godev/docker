@@ -3,7 +3,7 @@ FROM php:7.4-fpm-alpine
 ARG BUILD_DATE
 ARG VCS_REF
 
-ENV COMPOSER_ALLOW_SUPERUSER=0
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # We can decide to enable or disable opcache in runtime build
 # for example in development it's useful to keep this disable
@@ -18,9 +18,9 @@ ENV XDEBUG_CLIENT_PORT=9003
 LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
     PHP="7.4" \
     org.label-schema.name="6go-srl/docker" \
-    org.label-schema.description=" Docker image for internal usage on development and production" \
+    org.label-schema.description=" Docker image for internal usage on development" \
     org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.schema-version="1.0" \
+    org.label-schema.schema-version="1.1" \
     org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
     org.label-schema.vcs-ref=$VCS_REF
 
@@ -78,7 +78,8 @@ RUN rm -rf /usr/share/php \
     && rm -rf /var/cache/apk/*
 
 # Prepare the workdir
-RUN mkdir -p /var/www \
-    && chown -R www-data:www-data /var/www
+RUN mkdir -p /var/www
 
 WORKDIR /var/www
+
+CMD ["php-fpm", "--nodaemonize"]
