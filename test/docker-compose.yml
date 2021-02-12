@@ -3,7 +3,7 @@ version: "3.8"
 services:
   nginx:
     build:
-      context: ./nginx
+      context: ../nginx
       dockerfile: Dockerfile
       args:
         - TEMPLATE=php-socket.conf.template
@@ -20,13 +20,13 @@ services:
       - "80:80"
     volumes:
       - phpsocket:/var/run/socket
-      - ./test/website:/var/www:ro
+      - ./website:/var/www:ro
     networks:
       - docker-test-net
 
   php8:
     build:
-      context: ./php/8.0
+      context: ../php/8.0
       dockerfile: Dockerfile
       args:
         - OPCACHE_ENABLE=0
@@ -37,7 +37,7 @@ services:
       XDEBUG_MODE: debug, coverage, profile, trace
     volumes:
       - phpsocket:/var/run/socket
-      - ./test/website:/var/www:ro
+      - ./website:/var/www:ro
     networks:
       - docker-test-net
 
