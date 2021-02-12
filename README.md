@@ -48,7 +48,7 @@ mail:
     - customnet
 ```
 
-As long as the other services are inside *custonet* you will automatically catch any email that goes to this host.
+As long as the other services are inside _customnet_ you will automatically catch any email that goes to this host.
 
 ### NGINX
 
@@ -59,27 +59,26 @@ for now we need only a PHP-FPM related conf.
 When using this image you **must** pass some variables in order to generate the `default.conf` file, here an example:
 
 ```yml
-  nginx:
-    image: registry.gitlab.com/6go-srl/docker/nginx:latest
-    container_name: nginx
-    restart: on-failure
-    environment:
-      PORT: 80
-      SERVER_NAME: web.app
-      PHP_CONTAINER_NAME: php
-      PHP_CONTAINER_PORT: 9000
-      ROOT: /var/www/public/
-    ports:
-      - "80:80"
-    volumes:
-      - /path/to/source/code:/var/www/:ro
-    networks:
-      - customnet
+nginx:
+  image: registry.gitlab.com/6go-srl/docker/nginx:latest
+  container_name: nginx
+  restart: on-failure
+  environment:
+    PORT: 80
+    SERVER_NAME: web.app
+    PHP_CONTAINER_NAME: php
+    PHP_CONTAINER_PORT: 9000
+    ROOT: /var/www/public/
+  ports:
+    - "80:80"
+  volumes:
+    - /path/to/source/code:/var/www/:ro
+  networks:
+    - customnet
 ```
 
 The current template provided doesn't support HTTPS because it was designed for development purposes only. If you need HTTPS you should build a custom
 image based on this and slap inside everything needed for HTTPS like certbot.
-
 
 ### PHP
 
@@ -87,19 +86,20 @@ Here you will find different folders for different versions of PHP starting from
 A simple `docker-compose.yml` could look like this:
 
 ```yml
-  php:
-    image: registry.gitlab.com/6go-srl/docker/php:7.4
-    container_name: php
-    restart: always
-    environment:
-      APP_ENV: ${APP_ENV}
-      CONTAINER_ROLE: development|production|scheduler|queue
-    volumes:
-      - /path/to/source/code:/var/www:delegated
-    ports:
-      - "9000:9000"
-    networks:
-      - customnet
+php:
+  image: registry.gitlab.com/6go-srl/docker/php:7.4
+  container_name: php
+  restart: always
+  environment:
+    APP_ENV: ${APP_ENV}
+  volumes:
+    - /path/to/source/code:/var/www:delegated
+  ports:
+    - "9000:9000"
+  networks:
+    - customnet
 ```
 
 This container should be in the same newtork as MailHog and NGINX if you plan to use them together!
+
+> Warning: Since PHP 8 we move the php-fpm to use sockets instead of network ports, be sure to use the php-socket.conf.template on NGINX
