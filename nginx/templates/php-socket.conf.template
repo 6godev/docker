@@ -7,7 +7,7 @@
 
 # Upstream socket for PHP
 upstream _php {
-  server unix:/socket/php-fpm.sock
+  server unix:/socket/php-fpm.sock;
 }
 
 #
