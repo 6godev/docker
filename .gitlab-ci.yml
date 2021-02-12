@@ -33,6 +33,14 @@ php-7.4:
     - docker build --cache-from $CI_REGISTRY/6go-srl/docker/php:7.4 -t $CI_REGISTRY/6go-srl/docker/php:7.4 ./php/7.4/
     - docker push $CI_REGISTRY/6go-srl/docker/php:7.4
 
+php-8.0:
+  stage: php
+  needs: []
+  script:
+    - docker pull $CI_REGISTRY/6go-srl/docker/php:8.0 || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/php:8.0 -t $CI_REGISTRY/6go-srl/docker/php:8.0 ./php/8.0/
+    - docker push $CI_REGISTRY/6go-srl/docker/php:8.0
+
 nginx-1.19:
   stage: nginx
   needs: []
