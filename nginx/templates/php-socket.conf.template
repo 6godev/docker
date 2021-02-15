@@ -43,15 +43,26 @@ limit_req_zone $binary_remote_addr zone=one:10m rate=30r/m;
 limit_conn_zone $binary_remote_addr zone=addr:10m;
 
 server {
-    listen ${PORT} default_server;
-    listen [::]:${PORT};
+    listen 80;
+    listen [::]:80;
 
-    server_name ${SERVER_NAME};
-    root ${ROOT};
+    server_name example.test;
+
+     return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl default_server;
+    listen [::]:443;
+
+    server_name example.test;
+    root /var/www/;
     index index.php;
 
     error_log  /var/log/nginx/default.error.log;
     access_log /var/log/nginx/default.access.log;
+
+    include /etc/nginx/ssl_params;
 
     gzip on;
     gzip_vary on;
@@ -62,7 +73,7 @@ server {
     client_body_timeout 5s;
     client_header_timeout 5s;
 
-    disable_symlinks if_not_owner from=${ROOT};
+    disable_symlinks if_not_owner from=/var/www;
 
     set $skipCache 0;
 
@@ -126,8 +137,8 @@ server {
     location ~ /\.docker/  { deny all; }
     location ~ /\.git/  { deny all; }
     
-    ##location ${ACME_CHALLENGE_LOCATION} {
-    ##    default_type "text/plain";
-    ##    alias ${ACME_CHALLENGE_ALIAS};
-    ##}
+    location /.well-known/acme-challenge/ {
+        default_type "text/plain";
+        root /etc/ssl/certs;
+    }
 }

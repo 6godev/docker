@@ -6,11 +6,20 @@
 #
 
 server {
-    listen ${PORT} default_server;
-    listen [::]:${PORT};
+    listen 80;
+    listen [::]:80;
 
-    server_name ${SERVER_NAME};
-    root ${ROOT};
+    server_name example.test;
+
+     return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl default_server;
+    listen [::]:443;
+
+    server_name example.test;
+    root /var/www;
 
     index index.html;
 
@@ -27,7 +36,7 @@ server {
     gzip_http_version 1.1;
     gzip_min_length 1000;
 
-    disable_symlinks if_not_owner from=${ROOT};
+    disable_symlinks if_not_owner from=/var/www;
 
     location ~* \.(jpg|jpeg|png|gif|ico|ttf|woff)$ {
             expires 365d;
@@ -44,8 +53,8 @@ server {
     location ~ /\.docker/  { deny all; }
     location ~ /\.git/  { deny all; }
 
-    ##location ${ACME_CHALLENGE_LOCATION} {
-    ##    default_type "text/plain";
-    ##    alias ${ACME_CHALLENGE_ALIAS};
-    ##}
+    location /.well-known/acme-challenge/ {
+        default_type "text/plain";
+        root /etc/ssl/certs;
+    }
 }
