@@ -23,7 +23,7 @@ RUN touch /var/run/nginx.pid \
   && chmod -R g+w /var/cache/nginx \
   /etc/nginx
 
-RUN apk add openssl && \
+RUN apk add openssl \
   && openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 4096 \
   && rm -rf /var/cache/apk/*
 
