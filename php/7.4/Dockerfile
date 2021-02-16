@@ -25,6 +25,7 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
     org.label-schema.vcs-ref=$VCS_REF
 
 COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY ./config/php.ini "$PHP_INI_DIR"
 
 # Install Imagick, GD, MySQL, Postgres, Redis and other necessary extensions
