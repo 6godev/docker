@@ -22,9 +22,9 @@ ansible-2.10:
   stage: ansible
   needs: []
   script:
-    - docker pull $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 || true
-    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 -t $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 ./ansible/
-    - docker push $CI_REGISTRY/6go-srl/docker/ansible:2.10.1
+    - docker pull $CI_REGISTRY/6go-srl/docker/ansible:2.10.7 || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/ansible:2.10.7 -t $CI_REGISTRY/6go-srl/docker/ansible:2.10.7 ./ansible/
+    - docker push $CI_REGISTRY/6go-srl/docker/ansible:2.10.7
 
 laravel-echo:
   stage: laravel

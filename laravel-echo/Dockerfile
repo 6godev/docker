@@ -1,6 +1,16 @@
 FROM node:lts-alpine
 
+ARG BUILD_DATE
+
 WORKDIR /usr/local/src
+
+LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
+  org.label-schema.build-date=${BUILD_DATE} \
+  org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
+  org.label-schema.vcs-ref=${VCS_REF} \
+  org.label-schema.docker.dockerfile="/Dockerfile" \
+  org.label-schema.description="Laravel echo standalone server" \
+  org.label-schema.schema-version="1.0"
 
 RUN apk add --update --no-cache \
   sqlite \
