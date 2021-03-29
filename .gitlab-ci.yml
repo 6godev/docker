@@ -4,9 +4,10 @@ services:
 
 stages:
   - ansible
-  - php
-  - nginx
+  - laravel
   - mailhog
+  - nginx
+  - php
 
 variables:
   # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
@@ -25,6 +26,30 @@ ansible-2.10:
     - docker build --cache-from $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 -t $CI_REGISTRY/6go-srl/docker/ansible:2.10.1 ./ansible/
     - docker push $CI_REGISTRY/6go-srl/docker/ansible:2.10.1
 
+laravel-echo:
+  stage: laravel
+  needs: []
+  script:
+    - docker pull $CI_REGISTRY/6go-srl/docker/laravel-echo:1.0 || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/laravel-echo:1.0 -t $CI_REGISTRY/6go-srl/docker/laravel-echo:1.0 ./laravel-echo/
+    - docker push $CI_REGISTRY/6go-srl/docker/laravel-echo:1.0
+
+mailhog-latest:
+  stage: mailhog
+  needs: []
+  script:
+    - docker pull $CI_REGISTRY/6go-srl/docker/mailhog:latest || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/mailhog:latest -t $CI_REGISTRY/6go-srl/docker/mailhog:latest ./mailhog/
+    - docker push $CI_REGISTRY/6go-srl/docker/mailhog:latest
+
+nginx-1.19:
+  stage: nginx
+  needs: []
+  script:
+    - docker pull $CI_REGISTRY/6go-srl/docker/nginx:1.19 || true
+    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/nginx:1.19 -t $CI_REGISTRY/6go-srl/docker/nginx:1.19 ./nginx/
+    - docker push $CI_REGISTRY/6go-srl/docker/nginx:1.19
+
 php-7.4:
   stage: php
   needs: []
@@ -40,19 +65,3 @@ php-8.0:
     - docker pull $CI_REGISTRY/6go-srl/docker/php:8.0 || true
     - docker build --cache-from $CI_REGISTRY/6go-srl/docker/php:8.0 -t $CI_REGISTRY/6go-srl/docker/php:8.0 ./php/8.0/
     - docker push $CI_REGISTRY/6go-srl/docker/php:8.0
-
-nginx-1.19:
-  stage: nginx
-  needs: []
-  script:
-    - docker pull $CI_REGISTRY/6go-srl/docker/nginx:1.19 || true
-    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/nginx:1.19 -t $CI_REGISTRY/6go-srl/docker/nginx:1.19 ./nginx/
-    - docker push $CI_REGISTRY/6go-srl/docker/nginx:1.19
-
-mailhog-latest:
-  stage: mailhog
-  needs: []
-  script:
-    - docker pull $CI_REGISTRY/6go-srl/docker/mailhog:latest || true
-    - docker build --cache-from $CI_REGISTRY/6go-srl/docker/mailhog:latest -t $CI_REGISTRY/6go-srl/docker/mailhog:latest ./mailhog/
-    - docker push $CI_REGISTRY/6go-srl/docker/mailhog:latest
