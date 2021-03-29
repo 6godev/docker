@@ -24,10 +24,10 @@ RUN apk add --update --no-cache --virtual .build-deps build-base \
 
 RUN mkdir -p database
 
-COPY ./bin/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY ./bin/entrypoint.sh /usr/local/bin/docker-entrypoint
 COPY ./stubs/default.config.json /usr/local/src/laravel-echo-server.json
 
 EXPOSE 6001
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
+ENTRYPOINT ["docker-entrypoint"]
 CMD ["start"]

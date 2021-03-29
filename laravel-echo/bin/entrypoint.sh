@@ -7,6 +7,7 @@ if [[ "$1" == 'init' ]]; then
 fi
 
 if [ "$1" == 'start' ] && [ -f '/usr/local/src/laravel-echo-server.lock' ]; then
+    echo "Remove lock file"
     rm /usr/local/src/laravel-echo-server.lock
 fi
 
@@ -19,9 +20,9 @@ if [[ "$1" == 'start' ]] || [[ "$1" == 'client:add' ]] || [[ "$1" == 'client:rem
             sleep 2
             echo -n "."
         done
-    elif [[ ! -f /usr/local/src/laravel-echo-server.json ]]; then
-        cp /usr/local/src/laravel-echo-server.json /usr/local/src/laravel-echo-server.json
+    else
         # Replace with environment variables
+        echo "Replace with environment variables"
         sed -i "s|LARAVEL_ECHO_SERVER_DB|${LARAVEL_ECHO_SERVER_DB:-redis}|i" /usr/local/src/laravel-echo-server.json
         sed -i "s|REDIS_HOST|${REDIS_HOST:-redis}|i" /usr/local/src/laravel-echo-server.json
         sed -i "s|REDIS_PORT|${REDIS_PORT:-6379}|i" /usr/local/src/laravel-echo-server.json
