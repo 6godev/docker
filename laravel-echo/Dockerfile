@@ -1,16 +1,6 @@
 FROM node:lts-alpine
 
-ARG BUILD_DATE
-
-WORKDIR /usr/local/src
-
-LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
-  org.label-schema.build-date=${BUILD_DATE} \
-  org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
-  org.label-schema.vcs-ref=${VCS_REF} \
-  org.label-schema.docker.dockerfile="/Dockerfile" \
-  org.label-schema.description="Laravel echo standalone server" \
-  org.label-schema.schema-version="1.0"
+WORKDIR /app
 
 RUN apk add --update --no-cache \
   sqlite \
@@ -20,16 +10,17 @@ RUN apk add --update --no-cache \
 RUN apk add --update --no-cache --virtual .build-deps build-base \
   && yarn global add --prod --no-lockfile laravel-echo-server \
   && apk del .build-deps \
-  && yarn cache clean
+  && yarn cache clean \
+  && mkdir -p /app/database
 
-RUN mkdir -p database
-
-COPY ./bin/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY ./bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+COPY ./bin/health-check.sh /usr/local/bin/health-check
 COPY ./stubs/default.config.json /usr/local/src/laravel-echo-server.json
 
-RUN chmod 777 /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint
 
+VOLUME /app
 EXPOSE 6001
 
-ENTRYPOINT ["docker-entrypoint"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 CMD ["start"]
