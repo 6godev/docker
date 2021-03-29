@@ -34,8 +34,7 @@ RUN apk --update --no-cache add \
     rust \
     cargo
 
-RUN pip install --upgrade pip \
-    && curl -s -L https://networkgenomics.com/try/mitogen-{$MITOGEN_VERSION}.tar.gz | tar xzf - -C /opt/ \
+RUN curl -s -L https://networkgenomics.com/try/mitogen-{$MITOGEN_VERSION}.tar.gz | tar xzf - -C /opt/ \
     && mv /opt/mitogen-* /opt/mitogen \
     pip \
     cffi \
