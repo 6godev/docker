@@ -24,28 +24,24 @@ RUN apk --update --no-cache add \
     py3-pip \
     rsync \
     sshpass \
-    make
-
-RUN apk --update add --virtual \
-    .build-deps \
+    make \
     python3-dev \
     musl-dev \
     libffi-dev \
     openssl-dev \
     build-base \
-    ibc-dev \
     curl \
     rust \
-    cargo \
-    && pip install --upgrade pip \
+    cargo
+
+RUN pip install --upgrade pip \
     && curl -s -L https://networkgenomics.com/try/mitogen-{$MITOGEN_VERSION}.tar.gz | tar xzf - -C /opt/ \
     && mv /opt/mitogen-* /opt/mitogen \
     pip \
     cffi \
     && pip3 install \
     ansible==${ANSIBLE_VERSION} \
-    ansible-lint==${ANSIBLE_LINT_VERSION} \
-    && apk del .build-deps
+    ansible-lint==${ANSIBLE_LINT_VERSION}
 
 # Cleanup dependencies
 RUN rm -rf /usr/share/php \
