@@ -29,5 +29,5 @@ COPY ./stubs/default.config.json /usr/local/src/laravel-echo-server.json
 
 EXPOSE 6001
 
-ENTRYPOINT ["docker-entrypoint"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 CMD ["start"]
