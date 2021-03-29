@@ -17,24 +17,29 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
 RUN apk --update --no-cache add \
     ca-certificates \
     git \
+    gcc \
     openssh-client \
     openssl \
     python3\
+    py3-pip \
     rsync \
-    sshpass
+    sshpass \
+    make
 
 RUN apk --update add --virtual \
     .build-deps \
     python3-dev \
-    py3-pip \
+    musl-dev \
     libffi-dev \
     openssl-dev \
     build-base \
+    ibc-dev \
     curl \
+    rust \
+    cargo \
     && pip install --upgrade pip \
     && curl -s -L https://networkgenomics.com/try/mitogen-{$MITOGEN_VERSION}.tar.gz | tar xzf - -C /opt/ \
     && mv /opt/mitogen-* /opt/mitogen \
-    && pip3 install --upgrade \
     pip \
     cffi \
     && pip3 install \
