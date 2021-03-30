@@ -8,7 +8,7 @@ RUN apk add --update --no-cache \
   curl
 
 RUN apk add --update --no-cache --virtual .build-deps build-base \
-  && yarn global add --prod --no-lockfile laravel-echo-server \
+  && yarn global add --prod --no-lockfile laravel-echo pusher-js \
   && apk del .build-deps \
   && yarn cache clean \
   && mkdir -p /app/database
