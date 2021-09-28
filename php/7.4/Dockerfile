@@ -38,6 +38,7 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     postgresql-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
+    libgmp-dev \
     libzip-dev \
     git \
     icu-dev \
@@ -50,13 +51,13 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
-    && docker-php-ext-configure zip \
-    && docker-php-ext-configure opcache \
+    && docker-php-ext-configure zip opcache gmp \
     && docker-php-ext-install -j$(nproc) \
     bcmath \
     calendar \
     exif \
     gd \
+    gmp \
     intl \
     mbstring \
     opcache \
