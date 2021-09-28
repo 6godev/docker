@@ -46,12 +46,13 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     imagemagick-dev \
     mysql-client \
     oniguruma-dev \
+    pcre-dev \
     && pecl install xdebug imagick redis \
     && docker-php-ext-enable xdebug imagick redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
-    && docker-php-ext-configure zip gmp \
+    && docker-php-ext-configure zip \
     && docker-php-ext-install -j$(nproc) \
     bcmath \
     calendar \
@@ -60,6 +61,7 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     gmp \
     intl \
     mbstring \
+    opcache \
     pcntl \
     pgsql \
     pdo_pgsql \
