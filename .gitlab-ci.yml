@@ -1,6 +1,6 @@
-image: docker:stable
+image: docker:latest
 services:
-  - docker:stable-dind
+  - docker:dind
 
 stages:
   - laravel
