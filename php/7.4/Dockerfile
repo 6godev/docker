@@ -46,17 +46,18 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     imagemagick-dev \
     mysql-client \
     oniguruma-dev \
-    && pecl install xdebug imagick redis \
-    && docker-php-ext-enable xdebug imagick redis \
+    && pecl install imagick redis \
+    && docker-php-ext-enable imagick redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
-    && docker-php-ext-configure zip opcache \
+    && docker-php-ext-configure zip opcache gmp \
     && docker-php-ext-install -j$(nproc) \
     bcmath \
     calendar \
     exif \
     gd \
+    gmp \
     intl \
     mbstring \
     opcache \
