@@ -30,7 +30,7 @@ COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY ./config/php.ini "$PHP_INI_DIR"
 
 # Install Imagick, GD, MySQL, Redis and other necessary extensions
-RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool make \
+RUN apk add --no-cache --virtual .deps $PHPIZE_DEPS autoconf gcc g++ libtool make \
     && apk add --no-cache \
     freetype \
     freetype-dev \
@@ -62,7 +62,7 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     pcntl \
     pdo_mysql \
     zip \
-    && apk del -f .php-deps
+    && apk del -f .deps
 
 # Copy other .ini files after the installation process
 COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
