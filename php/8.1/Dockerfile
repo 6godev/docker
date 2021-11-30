@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine
+FROM php:8.1.0-fpm-alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -17,7 +17,7 @@ ENV XDEBUG_CLIENT_HOST=localhost
 ENV XDEBUG_CLIENT_PORT=9003
 
 LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
-    PHP="8.0" \
+    PHP="8.1" \
     org.label-schema.name="6go-srl/docker" \
     org.label-schema.description=" Docker image for internal usage on development" \
     org.label-schema.build-date=$BUILD_DATE \
