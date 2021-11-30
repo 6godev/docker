@@ -45,7 +45,7 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     imagemagick-dev \
     mysql-client \
     oniguruma-dev \
-    && pecl install -o -f imagick xdebug redis \
+    && pecl install imagick xdebug redis \
     && docker-php-ext-enable imagick xdebug redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl --enable-intl \
@@ -58,7 +58,6 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     exif \
     gd \
     intl \
-    mbstring \
     opcache \
     pcntl \
     pdo_mysql \
