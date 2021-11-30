@@ -56,3 +56,11 @@ php-8.0:
     - docker pull $CI_REGISTRY/6go-srl/docker/php:8.0 || true
     - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:8.0 -t $CI_REGISTRY/6go-srl/docker/php:8.0 ./php/8.0/
     - docker push $CI_REGISTRY/6go-srl/docker/php:8.0
+
+php-8.1:
+  stage: php
+  needs: []
+  script:
+    - docker pull $CI_REGISTRY/6go-srl/docker/php:8.1 || true
+    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:8.1 -t $CI_REGISTRY/6go-srl/docker/php:8.1 ./php/8.1/
+    - docker push $CI_REGISTRY/6go-srl/docker/php:8.1
