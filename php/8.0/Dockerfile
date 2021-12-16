@@ -28,21 +28,21 @@ ENV XDEBUG_CLIENT_PORT=9003
 # dependencies required for running "phpize"
 # these get automatically installed and removed by "docker-php-ext-*" (unless they're already installed)
 ENV PHPIZE_DEPS \
-        autoconf \
-        dpkg-dev \
-        dpkg \
-        file \
-        g++ \
-        gcc \
-        libc-dev \
-        make \
-        pkgconf \
-        re2c \
-        wget
+    autoconf \
+    dpkg-dev \
+    dpkg \
+    file \
+    g++ \
+    gcc \
+    libc-dev \
+    make \
+    pkgconf \
+    re2c \
+    wget
 
 RUN set -eux; \
 # Install Dependencies
-    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     curl \
     fcgi \
     freetype-dev \
