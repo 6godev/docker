@@ -61,7 +61,7 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     pcntl \
     pdo_mysql \
     zip \
-    && pecl install -o -f imagick xdebug redis \
+    && pecl install imagick xdebug redis \
     && docker-php-ext-enable imagick xdebug redis \
     && apk del -f .php-deps
 
