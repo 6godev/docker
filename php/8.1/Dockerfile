@@ -25,12 +25,26 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
     org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
     org.label-schema.vcs-ref=$VCS_REF
 
+# Copy other .ini files after the installation process
 COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY ./config/php.ini "$PHP_INI_DIR"
+COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
+COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # Install Imagick, GD, MySQL, Redis and other necessary extensions
-RUN apk add --no-cache --virtual .deps $PHPIZE_DEPS autoconf gcc g++ libtool make \
+# Compile Imagick from the source code
+# Install Composer
+# Prepare the workdir
+# Cleanup 
+RUN apk add --no-cache --virtual \
+    .php-deps \
+    $PHPIZE_DEPS \
+    autoconf \
+    gcc \
+    g++ \
+    libtool \
+    make \
     && apk add --no-cache \
     freetype \
     freetype-dev \
@@ -45,8 +59,7 @@ RUN apk add --no-cache --virtual .deps $PHPIZE_DEPS autoconf gcc g++ libtool mak
     imagemagick-dev \
     mysql-client \
     oniguruma-dev \
-    && pecl install imagick xdebug redis \
-    && docker-php-ext-enable imagick xdebug redis \
+    && pecl install -o -f xdebug redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
@@ -58,29 +71,33 @@ RUN apk add --no-cache --virtual .deps $PHPIZE_DEPS autoconf gcc g++ libtool mak
     exif \
     gd \
     intl \
+    mbstring \
     opcache \
     pcntl \
     pdo_mysql \
     zip \
-    && apk del -f .deps
-
-# Copy other .ini files after the installation process
-COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
-COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
-
-# Install Composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && docker-php-ext-enable xdebug redis \
+    && git clone https://github.com/Imagick/imagick \
+    && cd imagick \
+    && git checkout master \
+    && git pull \
+    && phpize \
+    && ./configure \
+    && make \
+    && make install \
+    && cd .. \
+    && rm -Rf imagick \
+    && docker-php-ext-enable imagick \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer \
-    && php -r "unlink('composer-setup.php');"
+    && php -r "unlink('composer-setup.php');" \
+    && mkdir -p /var/www \
+    && chown -Rf www-data:www-data /var/www \
+    && apk del -f .php-deps \
+    && rm -rf /usr/share/php /tmp/* /var/cache/apk/*
 
-# Cleanup dependencies
-RUN rm -rf /usr/share/php \
-    && rm -rf /tmp/* \
-    && rm -rf /var/cache/apk/*
-
-# Prepare the workdir
-RUN mkdir -p /var/www \
-    && chown -Rf www-data:www-data /var/www
+# Sanity check
+RUN php -v
 
 WORKDIR /var/www
 

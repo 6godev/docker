@@ -96,6 +96,9 @@ RUN apk add --no-cache --virtual \
     && apk del -f .php-deps \
     && rm -rf /usr/share/php /tmp/* /var/cache/apk/*
 
+# Sanity check
+RUN php -v
+
 WORKDIR /var/www
 
 CMD ["php-fpm", "--nodaemonize"]
