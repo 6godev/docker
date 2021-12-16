@@ -71,7 +71,6 @@ RUN apk add --no-cache --virtual \
     exif \
     gd \
     intl \
-    mbstring \
     opcache \
     pcntl \
     pdo_mysql \

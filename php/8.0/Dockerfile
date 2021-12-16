@@ -1,4 +1,13 @@
-FROM php:8.0-fpm-alpine
+FROM php:8.0-fpm-alpine3.15
+
+LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
+    PHP="8.0" \
+    org.label-schema.name="6go-srl/docker" \
+    org.label-schema.description=" Docker image for internal usage on development" \
+    org.label-schema.build-date=$BUILD_DATE \
+    org.label-schema.schema-version="1.2" \
+    org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
+    org.label-schema.vcs-ref=$VCS_REF
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -16,51 +25,51 @@ ENV XDEBUG_MODE=off
 ENV XDEBUG_CLIENT_HOST=localhost
 ENV XDEBUG_CLIENT_PORT=9003
 
-LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
-    PHP="8.0" \
-    org.label-schema.name="6go-srl/docker" \
-    org.label-schema.description=" Docker image for internal usage on development" \
-    org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.schema-version="1.1" \
-    org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
-    org.label-schema.vcs-ref=$VCS_REF
+# dependencies required for running "phpize"
+# these get automatically installed and removed by "docker-php-ext-*" (unless they're already installed)
+ENV PHPIZE_DEPS \
+        autoconf \
+        dpkg-dev \
+        dpkg \
+        file \
+        g++ \
+        gcc \
+        libc-dev \
+        make \
+        pkgconf \
+        re2c \
+        wget
 
-# Copy other .ini files after the installation process
-COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-COPY ./config/php.ini "$PHP_INI_DIR"
-COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
-COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
-
-# Install Imagick, GD, MySQL, Redis and other necessary extensions
-# Compile Imagick from the source code
-# Install Composer
-# Prepare the workdir
-# Cleanup 
-RUN apk add --no-cache --virtual \
-    .php-deps \
-    $PHPIZE_DEPS \
-    autoconf \
-    gcc \
-    g++ \
-    libtool \
-    make \
-    && apk add --no-cache \
-    freetype \
+RUN set -eux; \
+# Install Dependencies
+    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    curl \
+    fcgi \
     freetype-dev \
-    libpng \
-    libpng-dev \
-    libjpeg-turbo \
-    libjpeg-turbo-dev \
-    libzip-dev \
     git \
     icu-dev \
     imagemagick \
     imagemagick-dev \
+    libjpeg-turbo-dev \
+    libmcrypt-dev \
+    libpng \
+    libpng-dev \
+    libtool \
+    libwebp-dev \
+    libxml2-dev \
+    libzip-dev \
     mysql-client \
     oniguruma-dev \
+    unzip \
+# Install pecl packages
     && pecl install -o -f xdebug redis \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+# install imagick
+# use github version for now until release from https://pecl.php.net/get/imagick is ready for PHP 8
+# ref: https://github.com/Imagick/imagick/issues/358
+    && mkdir -p /usr/src/php/ext/imagick \
+    && curl -fsSL https://github.com/Imagick/imagick/archive/06116aa24b76edaf6b1693198f79e6c295eda8a9.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1 \
+# Configure PHP extensions
+    && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
     && docker-php-ext-configure zip \
@@ -76,25 +85,26 @@ RUN apk add --no-cache --virtual \
     pcntl \
     pdo_mysql \
     zip \
-    && docker-php-ext-enable xdebug redis \
-    && git clone https://github.com/Imagick/imagick \
-    && cd imagick \
-    && git checkout master \
-    && git pull \
-    && phpize \
-    && ./configure \
-    && make \
-    && make install \
-    && cd .. \
-    && rm -Rf imagick \
-    && docker-php-ext-enable imagick \
+    && docker-php-ext-enable imagick xdebug redis \
+# Install Composer
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer \
     && php -r "unlink('composer-setup.php');" \
+# Cleanup
     && mkdir -p /var/www \
     && chown -Rf www-data:www-data /var/www \
     && apk del -f .php-deps \
     && rm -rf /usr/share/php /tmp/* /var/cache/apk/*
+
+# https://github.com/docker-library/php/issues/1121
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+
+# Copy other .ini files after the installation process
+COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+COPY ./config/php.ini "$PHP_INI_DIR"
+COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
+COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # Sanity check
 RUN php -v
