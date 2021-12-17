@@ -62,7 +62,7 @@ RUN set -eux; \
     oniguruma-dev \
     unzip \
 # Install pecl packages
-    && pecl install -o -f xdebug redis \
+    && pecl install -o -f imagick xdebug redis \
 # install imagick
 # use github version for now until release from https://pecl.php.net/get/imagick is ready for PHP 8
 # ref: https://github.com/Imagick/imagick/issues/358
