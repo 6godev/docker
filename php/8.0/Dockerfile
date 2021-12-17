@@ -67,7 +67,7 @@ RUN set -eux; \
     && mkdir -p /var/www \
     && chown -Rf www-data:www-data /var/www \
 # Cleanup
-    && apt-get remove -y $BUILD_PACKAGES $PHPIZE_DEPS \
+    && apt-get remove -y $PHPIZE_DEPS \
     && apt autoremove -y \
     && apt-get autoclean -y \
     && rm -rf /usr/share/php /tmp/* /var/cache/apt/* \
