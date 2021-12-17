@@ -25,9 +25,6 @@ ENV XDEBUG_MODE=off
 ENV XDEBUG_CLIENT_HOST=localhost
 ENV XDEBUG_CLIENT_PORT=9003
 
-# Get Composer
-COPY --from=0 /usr/bin/composer /usr/bin/composer
-
 # Main RUN trunk for installing everything needed
 RUN set -eux; \
     apt-get update \
