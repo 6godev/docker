@@ -31,11 +31,11 @@ RUN set -eux; \
     apt-get update \
     && apt-get install $PHPIZE_DEPS \
     curl \
-    fcgi \
-    libfreetype6-dev \
     git \
-    libicu-dev \
     imagemagick \
+    libapache2-mod-fcgid \
+    libfreetype6-dev \    
+    libicu-dev \
     libjpeg-dev \
     libmcrypt-dev \
     libpng-dev \
