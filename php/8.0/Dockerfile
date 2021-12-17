@@ -25,11 +25,10 @@ ENV XDEBUG_MODE=off
 ENV XDEBUG_CLIENT_HOST=localhost
 ENV XDEBUG_CLIENT_PORT=9003
 
-# dependencies required for running "phpize"
-# these get automatically installed and removed by "docker-php-ext-*" (unless they're already installed)
+# Main RUN trunk for installing everything needed
 RUN set -eux; \
     apt-get update \
-    && apt-get install -y $PHPIZE_DEPS \
+    && apt-get install -y --no-install-recommends $PHPIZE_DEPS \
     git \
     imagemagick \
     libapache2-mod-fcgid \
@@ -44,10 +43,9 @@ RUN set -eux; \
     libwebp-dev \
     libxml2-dev \
     libzip-dev \
-    unzip
-
+    unzip \
 # Install PHP Extensions
-RUN pecl install -f imagick xdebug redis \
+    && pecl install -f imagick xdebug redis \
 # Configure PHP extensions
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-configure intl --enable-intl \
@@ -68,6 +66,13 @@ RUN pecl install -f imagick xdebug redis \
     && docker-php-ext-enable imagick xdebug redis \
     && mkdir -p /var/www \
     && chown -Rf www-data:www-data /var/www 
+# Cleanup
+    && apt-get remove -y $BUILD_PACKAGES $PHPIZE_DEPS \
+    && apt autoremove -y \
+    && apt-get autoclean -y \
+    && rm -rf /usr/share/php /tmp/* /var/cache/apt/*
+# Sanity check
+    && php -v && composer -v
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -78,14 +83,6 @@ COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY ./config/php.ini "$PHP_INI_DIR"
 COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
 COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
-
-# Cleanup
-RUN apt-get remove -y $BUILD_PACKAGES $PHPIZE_DEPS \
-    && apt autoremove -y \
-    && rm -rf /usr/share/php /tmp/* /var/cache/apk/*
-
-# Sanity check
-RUN php -v
 
 WORKDIR /var/www
 
