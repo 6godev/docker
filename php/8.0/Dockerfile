@@ -70,7 +70,7 @@ RUN set -eux; \
     && apt-get remove -y $BUILD_PACKAGES $PHPIZE_DEPS \
     && apt autoremove -y \
     && apt-get autoclean -y \
-    && rm -rf /usr/share/php /tmp/* /var/cache/apt/*
+    && rm -rf /usr/share/php /tmp/* /var/cache/apt/* \
 # Sanity check
     && php -v && composer -v
 
