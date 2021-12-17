@@ -28,8 +28,8 @@ ENV XDEBUG_CLIENT_PORT=9003
 # dependencies required for running "phpize"
 # these get automatically installed and removed by "docker-php-ext-*" (unless they're already installed)
 RUN set -eux; \
-    apt update \
-    && apt install $BUILD_PACKAGES $PHPIZE_DEPS \
+    apt-get update \
+    && apt-get install $PHPIZE_DEPS \
     curl \
     fcgi \
     freetype-dev \
@@ -83,7 +83,7 @@ COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
 COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # Cleanup
-RUN apt remove -y $BUILD_PACKAGES $PHPIZE_DEPS \
+RUN apt-get remove -y $BUILD_PACKAGES $PHPIZE_DEPS \
     && apt autoremove -y \
     && rm -rf /usr/share/php /tmp/* /var/cache/apk/*
 
