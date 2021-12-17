@@ -74,6 +74,7 @@ RUN set -eux; \
     && apt autoremove -y \
     && apt-get autoclean -y \
     && rm -rf /usr/share/php /tmp/* /var/cache/apt/* \
+    && rm -rf /var/lib/apt/lists/* \
 # Sanity check
     && php -v
 
