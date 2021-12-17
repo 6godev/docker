@@ -29,8 +29,7 @@ ENV XDEBUG_CLIENT_PORT=9003
 # these get automatically installed and removed by "docker-php-ext-*" (unless they're already installed)
 RUN set -eux; \
     apt-get update \
-    && apt-get install $PHPIZE_DEPS \
-    curl \
+    && apt-get install -y $PHPIZE_DEPS \
     git \
     imagemagick \
     libapache2-mod-fcgid \
