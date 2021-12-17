@@ -68,6 +68,9 @@ RUN set -eux; \
 # ref: https://github.com/Imagick/imagick/issues/358
     && mkdir -p /usr/src/php/ext/imagick \
     && curl -fsSL https://github.com/Imagick/imagick/archive/06116aa24b76edaf6b1693198f79e6c295eda8a9.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1 \
+    #&& cd /usr/src/php/ext/imagick && phpize && ./configure \
+    #&& make && make install \
+    #&& cd \
 # Configure PHP extensions
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-configure intl --enable-intl \
@@ -93,7 +96,7 @@ RUN set -eux; \
 # Cleanup
     && mkdir -p /var/www \
     && chown -Rf www-data:www-data /var/www \
-    && apk del -f .php-deps \
+    && apk del -f .build-deps \
     && rm -rf /usr/share/php /tmp/* /var/cache/apk/*
 
 # https://github.com/docker-library/php/issues/1121
