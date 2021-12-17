@@ -32,22 +32,19 @@ RUN set -eux; \
     && apt-get install $PHPIZE_DEPS \
     curl \
     fcgi \
-    freetype-dev \
+    libfreetype6-dev \
     git \
-    icu-dev \
+    libicu-dev \
     imagemagick \
-    imagemagick-dev \
-    libjpeg-turbo-dev \
+    libjpeg-dev \
     libmcrypt-dev \
-    libpng \
     libpng-dev \
     libonig-dev \
     libtool \
     libwebp-dev \
     libxml2-dev \
     libzip-dev \
-    mysql-client \
-    unzip \
+    unzip
 
 # Install PHP Extensions
 RUN pecl install -f imagick xdebug redis \
