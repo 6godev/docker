@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine3.15
+FROM php:8.0-fpm-alpine3.13
 
 LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
     PHP="8.0" \
