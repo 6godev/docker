@@ -29,6 +29,7 @@ ENV XDEBUG_CLIENT_PORT=9003
 RUN set -eux; \
     apt-get update \
     && apt-get install -y --no-install-recommends $PHPIZE_DEPS \
+    default-mysql-client \
     git \
     imagemagick \
     libapache2-mod-fcgid \
