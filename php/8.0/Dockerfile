@@ -65,7 +65,7 @@ RUN set -eux; \
     zip \
     && docker-php-ext-enable imagick xdebug redis \
     && mkdir -p /var/www \
-    && chown -Rf www-data:www-data /var/www 
+    && chown -Rf www-data:www-data /var/www \
 # Cleanup
     && apt-get remove -y $BUILD_PACKAGES $PHPIZE_DEPS \
     && apt autoremove -y \
