@@ -50,7 +50,7 @@ RUN set -eux; \
     unzip \
 
 # Install PHP Extensions
-RUN pecl install -o -f imagick xdebug redis \
+RUN pecl install -f imagick xdebug redis \
 # Configure PHP extensions
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-configure intl --enable-intl \
