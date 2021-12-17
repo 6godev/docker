@@ -84,7 +84,7 @@ COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # Cleanup
 RUN apt remove -y $BUILD_PACKAGES $PHPIZE_DEPS \
-    && apt autoremove -y
+    && apt autoremove -y \
     && rm -rf /usr/share/php /tmp/* /var/cache/apk/*
 
 # Sanity check
