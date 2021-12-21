@@ -1,4 +1,13 @@
-FROM php:7.4-fpm-alpine
+FROM php:7.4-fpm-bullseye
+
+LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
+    PHP="7.4" \
+    org.label-schema.name="6go-srl/docker" \
+    org.label-schema.description="Docker image for internal usage on development" \
+    org.label-schema.build-date=$BUILD_DATE \
+    org.label-schema.schema-version="2.0" \
+    org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
+    org.label-schema.vcs-ref=$VCS_REF
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -15,41 +24,32 @@ ENV XDEBUG_MODE=off
 ENV XDEBUG_CLIENT_HOST=localhost
 ENV XDEBUG_CLIENT_PORT=9003
 
-LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
-    PHP="7.4" \
-    org.label-schema.name="6go-srl/docker" \
-    org.label-schema.description="Docker image for internal usage on development" \
-    org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.schema-version="1.1" \
-    org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
-    org.label-schema.vcs-ref=$VCS_REF
-
-COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-COPY ./config/php.ini "$PHP_INI_DIR"
-
-# Install Imagick, GD, MySQL, Postgres, Redis and other necessary extensions
-RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool make \
-    && apk add --no-cache \
-    freetype \
-    freetype-dev \
-    libpng \
-    libpng-dev \
-    postgresql-dev \
-    libjpeg-turbo \
-    libjpeg-turbo-dev \
-    libzip-dev \
+# Main RUN trunk for installing everything needed
+RUN set -eux; \
+    apt-get update \
+    && apt-get install -y --no-install-recommends $PHPIZE_DEPS \
+    curl \
+    default-mysql-client \
     git \
-    gmp-dev \
-    icu-dev \
     imagemagick \
-    imagemagick-dev \
-    mysql-client \
-    oniguruma-dev \
-    pcre-dev \
+    libapache2-mod-fcgid \
+    libcurl4 \
+    libcurl4-openssl-dev \
+    libfreetype6-dev \    
+    libicu-dev \
+    libjpeg-dev \
+    libmagickwand-dev \
+    libmcrypt-dev \
+    libpng-dev \
+    libonig-dev \
+    libtool \
+    libwebp-dev \
+    libxml2-dev \
+    libzip-dev \
+    unzip \
     && pecl install xdebug imagick redis \
     && docker-php-ext-enable xdebug imagick redis \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
     && docker-php-ext-configure zip \
@@ -64,28 +64,26 @@ RUN apk add --no-cache --virtual .php-deps $PHPIZE_DEPS autoconf gcc g++ libtool
     opcache \
     pcntl \
     pgsql \
-    pdo_pgsql \
     pdo_mysql \
     zip \
-    && apk del -f .php-deps
+    && docker-php-ext-enable imagick xdebug redis \
+    && mkdir -p /var/www \
+    && chown -Rf www-data:www-data /var/www \
+# Cleanup
+    && apt-get remove -y $PHPIZE_DEPS \
+    && apt autoremove -y \
+    && apt-get autoclean -y \
+    && rm -rf /usr/share/php /tmp/* /var/cache/apt/* \
+    && rm -rf /var/lib/apt/lists/* \
+# Sanity check
+    && php -v
 
 # Copy other .ini files after the installation process
 COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
 COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
-
-# Install Composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer \
-    && php -r "unlink('composer-setup.php');"
-
-# Cleanup dependencies
-RUN rm -rf /usr/share/php \
-    && rm -rf /tmp/* \
-    && rm -rf /var/cache/apk/*
-
-# Prepare the workdir
-RUN mkdir -p /var/www \
-    && chown -Rf www-data:www-data /var/www
+COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+COPY ./config/php.ini "$PHP_INI_DIR"
 
 WORKDIR /var/www
 
