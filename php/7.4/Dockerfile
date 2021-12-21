@@ -38,6 +38,7 @@ RUN set -eux; \
     libfreetype6-dev \    
     libicu-dev \
     libjpeg-dev \
+    libgmp-dev \
     libmagickwand-dev \
     libmcrypt-dev \
     libpng-dev \
