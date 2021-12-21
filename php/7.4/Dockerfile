@@ -64,7 +64,6 @@ RUN set -eux; \
     mbstring \
     opcache \
     pcntl \
-    pgsql \
     pdo_mysql \
     zip \
     && docker-php-ext-enable imagick xdebug redis \
