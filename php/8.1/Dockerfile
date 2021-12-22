@@ -31,12 +31,9 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
     org.label-schema.name="6go-srl/docker" \
     org.label-schema.description=" Docker image for internal usage on development" \
     org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.schema-version="1.2" \
+    org.label-schema.schema-version="2.0" \
     org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
     org.label-schema.vcs-ref=$VCS_REF
-
-# Use this handy dandy installer
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 # Copy other .ini files after the installation process
 COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
