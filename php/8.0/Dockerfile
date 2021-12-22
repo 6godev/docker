@@ -1,3 +1,7 @@
+FROM composer:latest as composer
+
+RUN composer -v
+
 FROM php:8.0-fpm-bullseye
 
 LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
@@ -75,6 +79,9 @@ RUN set -eux; \
     && rm -rf /var/lib/apt/lists/* \
 # Sanity check
     && php -v
+
+# Add composer
+COPY --from=composer /usr/bin/composer/ /usr/local/bin/composer
 
 # Copy other .ini files after the installation process
 COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
