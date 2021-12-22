@@ -25,9 +25,12 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
     org.label-schema.name="6go-srl/docker" \
     org.label-schema.description=" Docker image for internal usage on development" \
     org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.schema-version="1.1" \
+    org.label-schema.schema-version="1.2" \
     org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
     org.label-schema.vcs-ref=$VCS_REF
+
+# Use this handy dandy installer
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 # Copy other .ini files after the installation process
 COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
@@ -44,45 +47,21 @@ COPY --from=composer /usr/bin/composer/ /usr/local/bin/composer
 # Install Composer
 # Prepare the workdir
 # Cleanup 
-RUN apk add --no-cache --virtual \
-    .php-deps \
-    autoconf \
-    gcc \
-    g++ \
-    libtool \
-    make \
-    && apk add --no-cache \
-    ${PHPIZE_DEPS} \
-    freetype \
-    freetype-dev \
-    libpng \
-    libpng-dev \
-    libjpeg-turbo \
-    libjpeg-turbo-dev \
-    libzip-dev \
-    git \
-    icu-dev \
-    imagemagick \
-    imagemagick-dev \
-    mysql-client \
-    oniguruma-dev \
-    && pecl install -o -f imagick xdebug redis \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-configure intl --enable-intl \
-    && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
-    && docker-php-ext-configure zip \
-    && docker-php-ext-configure opcache \
-    && docker-php-ext-install -j$(nproc) \
+RUN apk add --no-cache --virtual .php-deps ${PHPIZE_DEPS} \
+    && apk add --no-cache mysql-client \
+    && install-php-extensions \
     bcmath \
     calendar \
     exif \
     gd \
+    imagick \
     intl \
     opcache \
     pcntl \
     pdo_mysql \
+    redis \
+    xdebug \
     zip \
-    && docker-php-ext-enable imagick xdebug redis \
     && mkdir -p /var/www \
     && chown -Rf www-data:www-data /var/www \
     && apk del --no-cache -f .php-deps ${PHPIZE_DEPS} \
