@@ -49,6 +49,7 @@ COPY --from=composer /usr/bin/composer/ /usr/local/bin/composer
 # Cleanup 
 RUN apk add --no-cache --virtual .php-deps ${PHPIZE_DEPS} \
     && apk add --no-cache mysql-client \
+    && chmod +x /usr/local/bin/install-php-extensions \
     && install-php-extensions \
     bcmath \
     calendar \
