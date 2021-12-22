@@ -1,6 +1,12 @@
-FROM composer:latest as composer
+FROM composer:latest as COMPOSER
 
 RUN composer -v
+
+FROM php:8.1.0-cli-alpine as EXTENSION_INSTALLER
+
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/install-php-extensions
 
 FROM php:8.1.0-fpm-alpine
 
@@ -40,17 +46,16 @@ COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
 COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # Add composer
-COPY --from=composer /usr/bin/composer/ /usr/local/bin/composer
+COPY --from=COMPOSER /usr/bin/composer/ /usr/local/bin/composer
+
+# Add installer
+COPY --from=EXTENSION_INSTALLER /usr/local/bin/install-php-extensions /usr/local/bin/install-php-extensions
 
 # Install Imagick, GD, MySQL, Redis and other necessary extensions
-# Compile Imagick from the source code
-# Install Composer
 # Prepare the workdir
 # Cleanup 
-RUN apk add --no-cache --virtual .php-deps ${PHPIZE_DEPS} \
-    && apk add --no-cache mysql-client \
-    && chmod +x /usr/local/bin/install-php-extensions \
-    && install-php-extensions \
+RUN apk add --no-cache mysql-client \
+    && IPE_GD_WITHOUTAVIF=1 install-php-extensions \
     bcmath \
     calendar \
     exif \
@@ -65,7 +70,6 @@ RUN apk add --no-cache --virtual .php-deps ${PHPIZE_DEPS} \
     zip \
     && mkdir -p /var/www \
     && chown -Rf www-data:www-data /var/www \
-    && apk del --no-cache -f .php-deps ${PHPIZE_DEPS} \
     && rm -rf /usr/share/php /tmp/* /var/cache/apk/* \
 # Sanity check
     && php -v \
