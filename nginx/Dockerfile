@@ -13,7 +13,6 @@ COPY ./config/ /etc/nginx/
 COPY ./templates /etc/nginx/available-templates
 
 RUN apk add --no-cache  openssl \
-  && openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 4096 \
   && mkdir -p /var/www \
   && mkdir -p /var/cache/nginx \
   && mkdir -p /etc/nginx/templates \
@@ -23,5 +22,6 @@ RUN apk add --no-cache  openssl \
   && touch /var/run/nginx.pid \
   && chmod -R g+w /var/cache/nginx \
   /etc/nginx \
+  && openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 4096 \
   && rm -rf /var/cache/apk/*
 
