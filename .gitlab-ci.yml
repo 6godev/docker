@@ -36,11 +36,9 @@ mailhog-latest:
 nginx-1.19:
   stage: nginx
   needs: []
-  before_script:
-    - cd nginx
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/nginx:1.19 || true
-    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/nginx:1.19 -t $CI_REGISTRY/6go-srl/docker/nginx:1.19 -f ./1.19/Dockerfile .
+    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/nginx:1.19 -t $CI_REGISTRY/6go-srl/docker/nginx:1.19 -f ./nginx/1.19/Dockerfile .
     - docker push $CI_REGISTRY/6go-srl/docker/nginx:1.19
 
 php-7.4:
