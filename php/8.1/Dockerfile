@@ -51,7 +51,7 @@ COPY --from=EXTENSION_INSTALLER /usr/local/bin/install-php-extensions /usr/local
 # Install Imagick, GD, MySQL, Redis and other necessary extensions
 # Prepare the workdir
 # Cleanup 
-RUN apk add --no-cache mysql-client \
+RUN apk add --no-cache git mysql-client \
     && IPE_GD_WITHOUTAVIF=1 install-php-extensions \
     bcmath \
     calendar \
