@@ -12,7 +12,7 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
 RUN apk --no-cache add --virtual build-dependencies git \
   && mkdir -p /root/gocode \
   && export GOPATH=/root/gocode \
-  && go get github.com/mailhog/MailHog \
+  && go install github.com/mailhog/MailHog@latest \
   && mv /root/gocode/bin/MailHog /usr/local/bin \
   && apk del --purge build-dependencies
 
