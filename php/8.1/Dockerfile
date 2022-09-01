@@ -32,7 +32,7 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
     org.label-schema.name="6go-srl/docker" \
     org.label-schema.description=" Docker image for internal usage on development" \
     org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.schema-version="2.0" \
+    org.label-schema.schema-version="2.1" \
     org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
     org.label-schema.vcs-ref=$VCS_REF
 
@@ -52,7 +52,7 @@ COPY --from=EXTENSION_INSTALLER /usr/local/bin/install-php-extensions /usr/local
 # Install Imagick, GD, MySQL, Redis and other necessary extensions
 # Prepare the workdir
 # Cleanup 
-RUN apk add --no-cache git mysql-client \
+RUN apk add --no-cache git \
     && IPE_GD_WITHOUTAVIF=1 install-php-extensions \
     bcmath \
     calendar \
