@@ -1,4 +1,4 @@
-FROM composer:latest as COMPOSER
+FROM composer:2.2 as COMPOSER
 
 RUN composer -v
 
