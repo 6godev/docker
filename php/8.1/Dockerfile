@@ -52,7 +52,7 @@ COPY --from=EXTENSION_INSTALLER /usr/local/bin/install-php-extensions /usr/local
 # Prepare the workdir
 # Cleanup 
 RUN apk add --no-cache git \
-    && IPE_GD_WITHOUTAVIF=1 install-php-extensions \
+    && IPE_ICU_EN_ONLY=1 IPE_GD_WITHOUTAVIF=1 install-php-extensions \
     bcmath \
     calendar \
     exif \
@@ -63,7 +63,6 @@ RUN apk add --no-cache git \
     pcntl \
     pdo_mysql \
     redis \
-    xdebug \
     zip \
     && mkdir -p /var/www \
     && chown -Rf www-data:www-data /var/www \

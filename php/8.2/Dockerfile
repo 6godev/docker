@@ -50,8 +50,8 @@ COPY --from=EXTENSION_INSTALLER /usr/local/bin/install-php-extensions /usr/local
 # Install Imagick, GD, MySQL, Redis and other necessary extensions
 # Prepare the workdir
 # Cleanup 
-RUN apk add --no-cache \
-    && IPE_GD_WITHOUTAVIF=1 install-php-extensions \
+RUN apk add --no-cache git \
+    && IPE_ICU_EN_ONLY=1 IPE_GD_WITHOUTAVIF=1 install-php-extensions \
     bcmath \
     calendar \
     exif \
@@ -62,7 +62,6 @@ RUN apk add --no-cache \
     pcntl \
     pdo_mysql \
     redis \
-    xdebug \
     zip \
     && mkdir -p /var/www \
     && chown -Rf www-data:www-data /var/www \
