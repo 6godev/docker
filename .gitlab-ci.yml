@@ -3,7 +3,6 @@ services:
   - docker:dind
 
 stages:
-  - laravel
   - mailhog
   - nginx
   - php
@@ -16,14 +15,6 @@ variables:
 
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-
-laravel-echo:
-  stage: laravel
-  needs: []
-  script:
-    - docker pull $CI_REGISTRY/6go-srl/docker/laravel-echo:1.0 || true
-    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/laravel-echo:1.0 -t $CI_REGISTRY/6go-srl/docker/laravel-echo:1.0 ./laravel-echo/
-    - docker push $CI_REGISTRY/6go-srl/docker/laravel-echo:1.0
 
 mailhog-latest:
   stage: mailhog
@@ -54,7 +45,7 @@ php-5.6:
   needs: []
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/php:5.6 || true
-    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:5.6 -t $CI_REGISTRY/6go-srl/docker/php:5.6 ./php/5.6/
+    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:5.6 -t $CI_REGISTRY/6go-srl/docker/php:5.6 -f ./php/5.6/Dockerfile ./php
     - docker push $CI_REGISTRY/6go-srl/docker/php:5.6
 
 php-7.4:
@@ -62,21 +53,21 @@ php-7.4:
   needs: []
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/php:7.4 || true
-    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:7.4 -t $CI_REGISTRY/6go-srl/docker/php:7.4 ./php/7.4/
+    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:7.4 -t $CI_REGISTRY/6go-srl/docker/php:7.4 -f ./php/7.4/Dockerfile ./php
     - docker push $CI_REGISTRY/6go-srl/docker/php:7.4
-
-php-8.0:
-  stage: php
-  needs: []
-  script:
-    - docker pull $CI_REGISTRY/6go-srl/docker/php:8.0 || true
-    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:8.0 -t $CI_REGISTRY/6go-srl/docker/php:8.0 ./php/8.0/
-    - docker push $CI_REGISTRY/6go-srl/docker/php:8.0
 
 php-8.1:
   stage: php
   needs: []
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/php:8.1 || true
-    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:8.1 -t $CI_REGISTRY/6go-srl/docker/php:8.1 ./php/8.1/
+    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:8.1 -t $CI_REGISTRY/6go-srl/docker/php:8.1 -f ./php/8.1/Dockerfile ./php
     - docker push $CI_REGISTRY/6go-srl/docker/php:8.1
+
+php-8.2:
+  stage: php
+  needs: []
+  script:
+    - docker pull $CI_REGISTRY/6go-srl/docker/php:8.2 || true
+    - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:8.2 -t $CI_REGISTRY/6go-srl/docker/php:8.2 -f ./php/8.2/Dockerfile ./php
+    - docker push $CI_REGISTRY/6go-srl/docker/php:8.2

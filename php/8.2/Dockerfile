@@ -2,13 +2,13 @@ FROM composer:latest as COMPOSER
 
 RUN composer -v
 
-FROM php:8.0-cli-alpine as EXTENSION_INSTALLER
+FROM php:8.2-cli-alpine as EXTENSION_INSTALLER
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/install-php-extensions
 
-FROM php:8.0-fpm-alpine
+FROM php:8.2-fpm-alpine3.17
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -27,7 +27,7 @@ ENV XDEBUG_CLIENT_HOST=localhost
 ENV XDEBUG_CLIENT_PORT=9003
 
 LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
-    PHP="8.0" \
+    PHP="8.2" \
     org.label-schema.name="6go-srl/docker" \
     org.label-schema.description=" Docker image for internal usage on development" \
     org.label-schema.build-date=$BUILD_DATE \
@@ -35,15 +35,11 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
     org.label-schema.vcs-url="https://gitlab.com/6go-srl/docker" \
     org.label-schema.vcs-ref=$VCS_REF
 
-# Use this handy dandy installer
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-
 # Copy other .ini files after the installation process
-COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-COPY ./config/php.ini "$PHP_INI_DIR"
-COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
-COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
+COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./conf/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+COPY ./ini/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
+COPY ./ini/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # Add composer
 COPY --from=COMPOSER /usr/bin/composer/ /usr/local/bin/composer

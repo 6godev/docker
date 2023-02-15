@@ -2,13 +2,13 @@ FROM composer:latest as COMPOSER
 
 RUN composer -v
 
-FROM php:8.1.0-cli-alpine as EXTENSION_INSTALLER
+FROM php:8.1-cli-alpine as EXTENSION_INSTALLER
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/install-php-extensions
 
-FROM php:8.1.0-fpm-alpine
+FROM php:8.1-fpm-alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -37,11 +37,10 @@ LABEL maintainer="6GO S.r.l. <opensource@6go.it>" \
     org.label-schema.vcs-ref=$VCS_REF
 
 # Copy other .ini files after the installation process
-COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-COPY ./config/php.ini "$PHP_INI_DIR"
-COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
-COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
+COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./conf/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+COPY ./ini/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
+COPY ./ini/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # Add composer
 COPY --from=COMPOSER /usr/bin/composer/ /usr/local/bin/composer

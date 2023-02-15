@@ -35,11 +35,10 @@ ENV XDEBUG_CLIENT_HOST=localhost
 ENV XDEBUG_CLIENT_PORT=9003
 
 # Copy other .ini files after the installation process
-COPY ./config/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
-COPY ./config/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
-COPY ./config/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY ./config/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-COPY ./config/php.ini "$PHP_INI_DIR"
+COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./conf/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+COPY ./ini/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
+COPY ./ini/xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # Add composer
 COPY --from=COMPOSER /usr/bin/composer/ /usr/local/bin/composer
