@@ -13,12 +13,11 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2
 
-before_script:
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-
 mailhog-latest:
   stage: mailhog
   needs: []
+  before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/mailhog:latest || true
     - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/mailhog:latest -t $CI_REGISTRY/6go-srl/docker/mailhog:latest ./mailhog/
@@ -27,6 +26,8 @@ mailhog-latest:
 nginx-1.19:
   stage: nginx
   needs: []
+  before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/nginx:1.19 || true
     - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/nginx:1.19 -t $CI_REGISTRY/6go-srl/docker/nginx:1.19 -f ./nginx/1.19/Dockerfile ./nginx
@@ -35,6 +36,8 @@ nginx-1.19:
 nginx-1.21:
   stage: nginx
   needs: []
+  before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/nginx:1.21 || true
     - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/nginx:1.21 -t $CI_REGISTRY/6go-srl/docker/nginx:1.21 -f ./nginx/1.21/Dockerfile ./nginx
@@ -43,6 +46,8 @@ nginx-1.21:
 php-5.6:
   stage: php
   needs: []
+  before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/php:5.6 || true
     - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:5.6 -t $CI_REGISTRY/6go-srl/docker/php:5.6 -f ./php/5.6/Dockerfile ./php
@@ -51,6 +56,8 @@ php-5.6:
 php-7.4:
   stage: php
   needs: []
+  before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/php:7.4 || true
     - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:7.4 -t $CI_REGISTRY/6go-srl/docker/php:7.4 -f ./php/7.4/Dockerfile ./php
@@ -59,6 +66,8 @@ php-7.4:
 php-8.1:
   stage: php
   needs: []
+  before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/php:8.1 || true
     - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:8.1 -t $CI_REGISTRY/6go-srl/docker/php:8.1 -f ./php/8.1/Dockerfile ./php
@@ -67,6 +76,8 @@ php-8.1:
 php-8.2:
   stage: php
   needs: []
+  before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY/6go-srl/docker/php:8.2 || true
     - docker build --network host --cache-from $CI_REGISTRY/6go-srl/docker/php:8.2 -t $CI_REGISTRY/6go-srl/docker/php:8.2 -f ./php/8.2/Dockerfile ./php
