@@ -63,6 +63,7 @@ RUN apk add --no-cache git \
     pcntl \
     pdo_mysql \
     redis \
+    sockets \
     zip \
     && mkdir -p /var/www \
     && chown -Rf www-data:www-data /var/www \
